@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '**.sh'
+      - '.github/workflows/main.yml'
+      - '.github/workflows/shellcheck.yml'
+      - '.github/workflows/check_urls.yml'
+      - '.github/workflows/test_set_1.yml'
+      - '.github/workflows/test_set_2.yml'
+
+jobs:
+  shellcheck:
+    if: github.repository_owner == 'vpnlo'
+    uses: ./.github/workflows/shellcheck.yml
+
+  check_urls:
+    needs: shellcheck
+    uses: ./.github/workflows/check_urls.yml
+
+  test_set_1:
+    needs: [shellcheck, check_urls]
+    uses: ./.github/workflows/test_set_1.yml
+
+  test_set_2:
+    needs: [shellcheck, check_urls]
+    uses: ./.github/workflows/test_set_2.yml
